@@ -17,3 +17,7 @@ spring:
 
 server:
   port: 8085
+
+jwt:
+  secret: temporary-local-dev-secret-key-change-this-please-32bytes-min
+  expiration: 86400000  # 24시간
