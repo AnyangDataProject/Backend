@@ -42,4 +42,32 @@ public class S3Service {
 
         return String.format("https://%s.s3.amazonaws.com/%s", bucket, fileName);
     }
+
+    public String uploadFile(byte[] imageBytes, String contentType){
+        if(imageBytes == null || imageBytes.length == 0){
+            throw new IllegalArgumentException("이미지 없음");
+        }
+        String extension = "jpg";
+        if("image/png".equals(contentType)){
+            extension = "png";
+        }else if("image/webp".equals(contentType)){
+            extension = "webp";
+        }
+
+        String fileName = UUID.randomUUID()+"."+extension;
+
+
+        PutObjectRequest request = PutObjectRequest.builder()
+                .bucket(bucket)
+                .key(fileName)
+                .build();
+        s3Client.putObject(
+                request,
+                RequestBody.fromBytes(imageBytes)
+        );
+
+
+        return String.format("https://%s.s3.amazonaws.com/%s", bucket, fileName);
+
+    }
 }

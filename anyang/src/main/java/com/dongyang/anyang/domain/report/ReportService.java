@@ -1,5 +1,6 @@
 package com.dongyang.anyang.domain.report;
 
+import com.dongyang.anyang.domain.ai.*;
 import com.dongyang.anyang.domain.image.ReportImage;
 import com.dongyang.anyang.domain.image.ReportImageRepository;
 import com.dongyang.anyang.s3.S3Service;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Base64;
 import java.util.List;
 
@@ -18,6 +20,9 @@ public class ReportService {
     private final ReportRepository reportRepository;
     private final ReportImageRepository reportImageRepository;
     private final S3Service s3Service;
+    private final AiAnalysisService aiAnalysisService;
+    private final AiAnalysisRepository aiAnalysisRepository;
+    private final AiDetectionRepository aiDetectionRepository;
 
     public Long create(ReportDto dto, List<MultipartFile> images) {
         try {
@@ -46,6 +51,32 @@ public class ReportService {
                 reportImage.setImageType(image.getContentType());
 
                 reportImageRepository.save(reportImage);
+
+                AiResponseDto aiResponse = aiAnalysisService.predict(image);
+                String base64ResultImage = aiResponse.getResultImage();
+                byte[] resultImageBytes = Base64.getDecoder().decode(base64ResultImage);
+                String resultImageUrl = s3Service.uploadFile(resultImageBytes, "image/jpeg");
+
+                AiAnalysis analysis = AiAnalysis.builder().report(savedReport)
+                        .modelName("yolov8s").modelVersion("rdd2022").resultImageUrl(resultImageUrl)
+                        .build();
+
+                AiAnalysis savedAnalysis = aiAnalysisRepository.save(analysis);
+
+                for(AiResponseDto.Detections detections: aiResponse.getDetections()){
+                    AiDetection aiDetection = AiDetection.builder()
+                            .aiAnalysis(savedAnalysis).className(detections.getClassName())
+                            .confidence(BigDecimal.valueOf(detections.getConfidence()))
+                            .bboxX(BigDecimal.valueOf(detections.getBboxX()))
+                            .bboxY(BigDecimal.valueOf(detections.getBboxY()))
+                            .bboxWidth(BigDecimal.valueOf(detections.getBboxWidth()))
+                            .bboxHeight(BigDecimal.valueOf(detections.getBboxHeight()))
+                            .build();
+
+                    aiDetectionRepository.save(aiDetection);
+
+                }
+
             }
             return savedReport.getId();
         }
