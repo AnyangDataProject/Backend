@@ -1,4 +1,4 @@
 package com.dongyang.anyang.domain.ai;
 
-public class AiDetectionRepository {
+public interface AiDetectionRepository {
 }

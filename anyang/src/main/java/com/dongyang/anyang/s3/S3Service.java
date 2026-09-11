@@ -19,16 +19,14 @@ public class S3Service {
     private String bucket;
 
     public String uploadFile(String base64Image){
-        if(base64Image.isBlank() || base64Image == null){
+        if (base64Image == null || base64Image.isBlank()){
             throw new IllegalArgumentException("이미지가 없음");
         }
-
-        byte[] imageBytes = Base64.getDecoder().decode(base64Image);
-
 
         if (base64Image.contains(",")) {
             base64Image = base64Image.substring(base64Image.indexOf(",") + 1);
         }
+        byte[] imageBytes = Base64.getDecoder().decode(base64Image);
 
         String fileName = UUID.randomUUID()+".png";
 

@@ -20,10 +20,10 @@ server:
 
 
 
-  cloud:
-    aws:
-      s3:
-        bucket: anyang-project-bucket
-        region: ap-southeast-2
-        access-key: ${AWS_ACCESS_KEY}
-        secret-key: ${AWS_SECRET_KEY}
+cloud:
+  aws:
+    s3:
+      bucket: anyang-project-bucket
+      region: ap-southeast-2
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
