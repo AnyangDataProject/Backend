@@ -24,7 +24,7 @@ public class ReportService {
             Report report = Report.builder()
                     .description(dto.getDetail())
                     .latitude(dto.getLatitude())
-                    .longtitude(dto.getLongtitude())
+                    .longitude(dto.getLongitude())
                     .address(dto.getAddress())
                     .damageType(dto.getDamageType())
                     .severity(Report.Severity.valueOf(dto.getSeverity().toUpperCase()))

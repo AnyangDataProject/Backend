@@ -1,4 +1,6 @@
 package com.dongyang.anyang.domain.ai;
 
-public interface AiDetectionRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface AiDetectionRepository extends JpaRepository<AiDetection, Long> {
 }

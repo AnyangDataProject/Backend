@@ -11,7 +11,7 @@ public class ReportDto {
 
     private String detail;
     private BigDecimal latitude;
-    private BigDecimal longtitude;
+    private BigDecimal longitude;
     private String address;
     private String damageType;
     private String severity;

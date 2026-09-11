@@ -30,7 +30,7 @@ public class Report {
     private BigDecimal latitude;
 
     @Column(nullable = false)
-    private BigDecimal longtitude;
+    private BigDecimal longitude;
 
     private String address;
 
