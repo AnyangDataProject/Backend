@@ -9,11 +9,11 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class ReportDto {
 
-    private String description;
+    private String detail;
     private BigDecimal latitude;
     private BigDecimal longtitude;
     private String address;
-    private String damage_type;
+    private String damageType;
     private String severity;
 
 

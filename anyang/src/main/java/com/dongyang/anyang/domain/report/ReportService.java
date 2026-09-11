@@ -22,11 +22,11 @@ public class ReportService {
     public Long create(ReportDto dto, List<MultipartFile> images) {
         try {
             Report report = Report.builder()
-                    .description(dto.getDescription())
+                    .description(dto.getDetail())
                     .latitude(dto.getLatitude())
                     .longtitude(dto.getLongtitude())
                     .address(dto.getAddress())
-                    .damageType(dto.getDamage_type())
+                    .damageType(dto.getDamageType())
                     .severity(Report.Severity.valueOf(dto.getSeverity().toUpperCase()))
                     .status(Report.ReportStatus.RECEIVED)
                     .build();
