@@ -3,6 +3,7 @@ package com.dongyang.anyang.domain.report;
 import com.dongyang.anyang.domain.ai.*;
 import com.dongyang.anyang.domain.image.ReportImage;
 import com.dongyang.anyang.domain.image.ReportImageRepository;
+import com.dongyang.anyang.domain.image.ReportImageResponseDto;
 import com.dongyang.anyang.s3.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -83,5 +84,54 @@ public class ReportService {
         catch(IOException e){
             throw new RuntimeException("이미지 처리 중 오류 발생", e);
         }
+    }
+
+    public List<ReportResponseDto> getMyReports(){
+        List<Report> reports = reportRepository.findAll();
+
+
+        return reports.stream().map(
+                report -> {
+                    List<AiAnalysis> aiResults = aiAnalysisRepository.findByReportId(report.getId());
+                    List<ReportImage> reportImages = reportImageRepository.findByReportId(report.getId());
+                    Double aiConfidence = null;
+                    if(!aiResults.isEmpty()){
+                        AiAnalysis analysis = aiResults.get(0);
+                        List<AiDetection> detections = aiDetectionRepository.findByAiAnalysisId(analysis.getId());
+                        if(!detections.isEmpty()){
+                            aiConfidence = detections.stream()
+                                    .map(detection -> detection.getConfidence())
+                                    .mapToDouble(confidence -> confidence.doubleValue())
+                                    .max()
+                                    .orElse(0.0);
+
+                        }
+                    }
+
+                    List<ReportImageResponseDto> images = reportImages.stream()
+                            .map(image -> ReportImageResponseDto.builder()
+                                    .id(image.getId())
+                                    .imageUrl(image.getImageUrl())
+                                    .build())
+                            .toList();
+
+
+                return ReportResponseDto.builder()
+                        .id(report.getId()).type(report.getDamageType())
+                        .severity(report.getSeverity().name().toLowerCase())
+                        .status(report.getStatus().name().toLowerCase())
+                        .address(report.getAddress())
+                        .latitude(report.getLatitude())
+                        .longitude(report.getLongitude())
+                        .reportedAt(report.getCreatedAt())
+                        .description(report.getDescription())
+                        .aiConfidence(aiConfidence)
+                        .images(images)
+                        .build();
+
+                })
+                .toList();
+
+
     }
 }

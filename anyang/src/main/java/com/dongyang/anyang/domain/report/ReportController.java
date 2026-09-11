@@ -3,6 +3,7 @@ package com.dongyang.anyang.domain.report;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,5 +21,10 @@ public class ReportController {
 
         return ResponseEntity.ok( reportService.create(dto, images)
         );
+    }
+
+    @GetMapping("/api/report/my")
+    public ResponseEntity<List<ReportResponseDto>> getMyReports(){
+        return ResponseEntity.ok(reportService.getMyReports());
     }
 }
