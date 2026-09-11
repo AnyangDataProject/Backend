@@ -48,6 +48,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private OAuth2UserInfo getOAuth2UserInfo(String registrationId, Map<String, Object> attributes) {
         if ("google".equals(registrationId)) {
             return new GoogleOAuth2UserInfo(attributes);
+        } else if ("naver".equals(registrationId)) {
+            return new NaverOAuth2UserInfo(attributes);
         }
         throw new OAuth2AuthenticationException("지원하지 않는 로그인 방식입니다: " + registrationId);
     }
