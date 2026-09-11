@@ -1,5 +1,6 @@
 package com.dongyang.anyang.domain.ai;
 
+import com.dongyang.anyang.domain.image.ReportImage;
 import com.dongyang.anyang.domain.report.Report;
 import jakarta.persistence.*;
 import lombok.*;
@@ -52,5 +53,9 @@ public class AiAnalysis {
             analyzedAt = LocalDateTime.now();
         }
     }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "report_image_id")
+    private ReportImage reportImage;
 
 }

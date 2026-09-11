@@ -51,7 +51,7 @@ public class ReportService {
                 reportImage.setImageUrl(imageUrl);
                 reportImage.setImageType(image.getContentType());
 
-                reportImageRepository.save(reportImage);
+                ReportImage savedImage = reportImageRepository.save(reportImage);
 
                 AiResponseDto aiResponse = aiAnalysisService.predict(image);
                 String base64ResultImage = aiResponse.getResultImage();
@@ -60,6 +60,7 @@ public class ReportService {
 
                 AiAnalysis analysis = AiAnalysis.builder().report(savedReport)
                         .modelName("yolov8s").modelVersion("rdd2022").resultImageUrl(resultImageUrl)
+                        .reportImage(savedImage)
                         .build();
 
                 AiAnalysis savedAnalysis = aiAnalysisRepository.save(analysis);
@@ -94,6 +95,18 @@ public class ReportService {
                 report -> {
                     List<AiAnalysis> aiResults = aiAnalysisRepository.findByReportId(report.getId());
                     List<ReportImage> reportImages = reportImageRepository.findByReportId(report.getId());
+                    List<ReportImageResponseDto> resultImages = reportImages.stream().map(image -> {
+                        AiAnalysis aiAnalysis = aiAnalysisRepository.findByReportImageId(image.getId()).orElse(null);
+                        return ReportImageResponseDto.builder().id(image.getId())
+                                .imageUrl(image.getImageUrl())
+                                .resultImageUrl(
+                                        aiAnalysis != null ? aiAnalysis.getResultImageUrl() : null)
+                                .build();
+
+                    })
+                            .toList();
+
+
                     Double aiConfidence = null;
                     if(!aiResults.isEmpty()){
                         AiAnalysis analysis = aiResults.get(0);
@@ -108,12 +121,12 @@ public class ReportService {
                         }
                     }
 
-                    List<ReportImageResponseDto> images = reportImages.stream()
-                            .map(image -> ReportImageResponseDto.builder()
-                                    .id(image.getId())
-                                    .imageUrl(image.getImageUrl())
-                                    .build())
-                            .toList();
+//                    List<ReportImageResponseDto> images = reportImages.stream()
+//                            .map(image -> ReportImageResponseDto.builder()
+//                                    .id(image.getId())
+//                                    .imageUrl(image.getImageUrl())
+//                                    .build())
+//                            .toList();
 
 
                 return ReportResponseDto.builder()
@@ -126,7 +139,7 @@ public class ReportService {
                         .reportedAt(report.getCreatedAt())
                         .description(report.getDescription())
                         .aiConfidence(aiConfidence)
-                        .images(images)
+                        .images(resultImages)
                         .build();
 
                 })

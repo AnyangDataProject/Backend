@@ -8,4 +8,5 @@ import lombok.Getter;
 public class ReportImageResponseDto {
     private Long id;
     private String imageUrl;
+    private String resultImageUrl;
 }
