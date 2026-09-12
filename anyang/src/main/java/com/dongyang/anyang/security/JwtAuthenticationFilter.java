@@ -28,10 +28,29 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
         String token = resolveToken(request);
 
+
         if(token != null && jwtProvider.validateToken(token)) {
             Long userId = jwtProvider.getUserId(token);
             Optional<User> userOptional = userRepository.findById(userId);
+            if(userOptional.isPresent()) {
+                CustomUserDetails userDetails = new CustomUserDetails(userOptional.get());
 
+                System.out.println("========== JWT AUTH ==========");
+                System.out.println("USER ID = " + userDetails.getId());
+                System.out.println("USER EMAIL = " + userDetails.getUsername());
+                System.out.println("USER ROLE = " + userOptional.get().getRole());
+                System.out.println("AUTHORITIES = " + userDetails.getAuthorities());
+                System.out.println("==============================");
+
+                UsernamePasswordAuthenticationToken authentication =
+                        new UsernamePasswordAuthenticationToken(
+                                userDetails,
+                                null,
+                                userDetails.getAuthorities()
+                        );
+
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
             if(userOptional.isPresent()) {
                 CustomUserDetails userDetails = new CustomUserDetails(userOptional.get());
 
