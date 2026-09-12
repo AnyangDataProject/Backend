@@ -1,5 +1,6 @@
 package com.dongyang.anyang.domain.inquiry;
 
+import com.dongyang.anyang.domain.inquiry.file.InquiryFileService;
 import com.dongyang.anyang.domain.user.Role;
 import com.dongyang.anyang.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
@@ -10,12 +11,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/inquiries")
 @RequiredArgsConstructor
 public class InquiryController {
     private final InquiryService inquiryService;
+    private final InquiryFileService inquiryFileService;
 
     @PostMapping
     public ResponseEntity<Long> create(@RequestBody InquiryDto.CreateRequest request,
@@ -62,5 +67,13 @@ public class InquiryController {
                                        @AuthenticationPrincipal CustomUserDetails userDetails) {
         inquiryService.delete(id, userDetails.getUser());
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{id}/files")
+    public ResponseEntity<List<String>> uploadFiles(@PathVariable Long id,
+                                                    @RequestParam("files")List<MultipartFile> files,
+                                                    @AuthenticationPrincipal CustomUserDetails userDetails) {
+        List<String> fileUrls = inquiryFileService.uploadFiles(id, userDetails.getUser(), files);
+        return ResponseEntity.ok(fileUrls);
     }
 }
