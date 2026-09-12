@@ -15,6 +15,11 @@ public class InquiryDto {
             String answer
     ) {}
 
+    public record UpdateRequest(
+            String title,
+            String content
+    ) {}
+
     public record ListResponse(
             Long id,
             InquiryType inquiryType,
@@ -28,6 +33,7 @@ public class InquiryDto {
             InquiryType inquiryType,
             String title,
             String content,
+            String email,
             InquiryStatus status,
             String answer,
             String answeredByName,
