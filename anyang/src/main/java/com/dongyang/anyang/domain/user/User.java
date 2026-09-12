@@ -40,10 +40,17 @@ public class User {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    @Column(name = "last_login")
+    private LocalDateTime lastLogin;
+
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
     }
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserStatus status = UserStatus.ACTIVE;
 
     @Builder
     public User(String email,
@@ -62,5 +69,14 @@ public class User {
 
     public void updateRole(Role role) {
         this.role = role;
+    }
+
+    public void updateLastLogin(){
+        this.lastLogin = LocalDateTime.now();
+    }
+
+    public enum UserStatus{
+        ACTIVE,
+        SUSPENDED
     }
 }
