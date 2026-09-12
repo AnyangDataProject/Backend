@@ -34,6 +34,12 @@ public class InquiryService {
     }
 
     @Transactional(readOnly = true)
+    public Page<InquiryDto.ListResponse> getMyInquiries(User user, Pageable pageable) {
+        return inquiryRepository.findByUserId(user.getId(), pageable)
+                .map(this::toListResponse);
+    }
+
+    @Transactional(readOnly = true)
     public Page<InquiryDto.ListResponse> getAllInquiries(Pageable pageable) {
         return inquiryRepository.findAll(pageable)
                 .map(this::toListResponse);
