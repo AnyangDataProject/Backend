@@ -79,4 +79,8 @@ public class User {
         ACTIVE,
         SUSPENDED
     }
+
+    public void updateStatus(UserStatus status){
+        this.status = status;
+    }
 }

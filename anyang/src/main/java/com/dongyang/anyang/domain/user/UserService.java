@@ -31,4 +31,12 @@ public class UserService {
                             )
                             .toList();
     }
+
+    public void updateStatus(Long userId, UserStatusUpdateDto dto){
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없음"));
+
+        user.updateStatus(dto.getStatus());
+        userRepository.save(user);
+    }
 }
