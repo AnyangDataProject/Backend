@@ -4,6 +4,8 @@ import com.dongyang.anyang.domain.ai.*;
 import com.dongyang.anyang.domain.image.ReportImage;
 import com.dongyang.anyang.domain.image.ReportImageRepository;
 import com.dongyang.anyang.domain.image.ReportImageResponseDto;
+import com.dongyang.anyang.domain.user.User;
+import com.dongyang.anyang.domain.user.UserRepository;
 import com.dongyang.anyang.s3.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -24,10 +26,13 @@ public class ReportService {
     private final AiAnalysisService aiAnalysisService;
     private final AiAnalysisRepository aiAnalysisRepository;
     private final AiDetectionRepository aiDetectionRepository;
+    private final UserRepository userRepository;
 
-    public Long create(ReportDto dto, List<MultipartFile> images) {
+    public Long create(ReportDto dto, List<MultipartFile> images, Long userId) {
         try {
+            User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없음"));
             Report report = Report.builder()
+                    .user(user)
                     .description(dto.getDetail())
                     .latitude(dto.getLatitude())
                     .longitude(dto.getLongitude())
