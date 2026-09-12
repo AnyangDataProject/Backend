@@ -39,9 +39,23 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 30MB
 
 server:
   port: 8085
+
+
+
+cloud:
+  aws:
+    s3:
+      bucket: anyang-project-bucket
+      region: ap-southeast-2
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
 
 jwt:
   secret: temporary-local-dev-secret-key-change-this-please-32bytes-min
@@ -49,3 +63,4 @@ jwt:
 
 admin:
   emails: leenayeon0915@gmail.com,
+
