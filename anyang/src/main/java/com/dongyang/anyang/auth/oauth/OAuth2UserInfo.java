@@ -1,4 +1,6 @@
 package com.dongyang.anyang.auth.oauth;
 
-public class OAuth2UserInfo {
+public interface OAuth2UserInfo {
+    String getEmail();
+    String getName();
 }
