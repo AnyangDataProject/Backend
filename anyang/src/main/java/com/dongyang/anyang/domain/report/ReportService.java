@@ -92,8 +92,8 @@ public class ReportService {
         }
     }
 
-    public List<ReportResponseDto> getMyReports(){
-        List<Report> reports = reportRepository.findAll();
+    public List<ReportResponseDto> getMyReports(Long userId){
+        List<Report> reports = reportRepository.findByUserId(userId);
 
 
         return reports.stream().map(

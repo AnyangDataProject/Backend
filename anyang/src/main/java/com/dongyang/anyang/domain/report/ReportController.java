@@ -29,7 +29,8 @@ public class ReportController {
     }
 
     @GetMapping("/api/report/my")
-    public ResponseEntity<List<ReportResponseDto>> getMyReports(){
-        return ResponseEntity.ok(reportService.getMyReports());
+    public ResponseEntity<List<ReportResponseDto>> getMyReports(@AuthenticationPrincipal CustomUserDetails userDetails){
+        Long userId = userDetails.getId();
+        return ResponseEntity.ok(reportService.getMyReports(userId));
     }
 }
