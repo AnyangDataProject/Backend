@@ -12,6 +12,7 @@ import java.util.List;
 @Builder
 public class ReportResponseDto {
     private Long id;
+    private String userName;
     private String type;
     private String severity;
     private String status;

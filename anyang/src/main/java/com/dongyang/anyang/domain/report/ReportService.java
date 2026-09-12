@@ -41,7 +41,7 @@ public class ReportService {
                     .severity(Report.Severity.valueOf(dto.getSeverity().toUpperCase()))
                     .status(Report.ReportStatus.RECEIVED)
                     .build();
-            // report.setUser(user);
+
 
             Report savedReport = reportRepository.save(report);
 
@@ -136,6 +136,7 @@ public class ReportService {
 
                 return ReportResponseDto.builder()
                         .id(report.getId()).type(report.getDamageType())
+                        .userName(report.getUser().getName())
                         .severity(report.getSeverity().name().toLowerCase())
                         .status(report.getStatus().name().toLowerCase())
                         .address(report.getAddress())
@@ -150,6 +151,65 @@ public class ReportService {
                 })
                 .toList();
 
+
+    }
+    public List<ReportResponseDto> getAllReports(){
+        List<Report> reports = reportRepository.findAll();
+
+        return reports.stream().map(
+                        report -> {
+                            List<AiAnalysis> aiResults = aiAnalysisRepository.findByReportId(report.getId());
+                            List<ReportImage> reportImages = reportImageRepository.findByReportId(report.getId());
+                            List<ReportImageResponseDto> resultImages = reportImages.stream().map(image -> {
+                                        AiAnalysis aiAnalysis = aiAnalysisRepository.findByReportImageId(image.getId()).orElse(null);
+                                        return ReportImageResponseDto.builder().id(image.getId())
+                                                .imageUrl(image.getImageUrl())
+                                                .resultImageUrl(
+                                                        aiAnalysis != null ? aiAnalysis.getResultImageUrl() : null)
+                                                .build();
+
+                                    })
+                                    .toList();
+
+
+                            Double aiConfidence = null;
+                            if(!aiResults.isEmpty()){
+                                AiAnalysis analysis = aiResults.get(0);
+                                List<AiDetection> detections = aiDetectionRepository.findByAiAnalysisId(analysis.getId());
+                                if(!detections.isEmpty()){
+                                    aiConfidence = detections.stream()
+                                            .map(detection -> detection.getConfidence())
+                                            .mapToDouble(confidence -> confidence.doubleValue())
+                                            .max()
+                                            .orElse(0.0);
+
+                                }
+                            }
+
+//                    List<ReportImageResponseDto> images = reportImages.stream()
+//                            .map(image -> ReportImageResponseDto.builder()
+//                                    .id(image.getId())
+//                                    .imageUrl(image.getImageUrl())
+//                                    .build())
+//                            .toList();
+
+
+                            return ReportResponseDto.builder()
+                                    .id(report.getId()).type(report.getDamageType())
+                                    .userName(report.getUser().getName())
+                                    .severity(report.getSeverity().name().toLowerCase())
+                                    .status(report.getStatus().name().toLowerCase())
+                                    .address(report.getAddress())
+                                    .latitude(report.getLatitude())
+                                    .longitude(report.getLongitude())
+                                    .reportedAt(report.getCreatedAt())
+                                    .description(report.getDescription())
+                                    .aiConfidence(aiConfidence)
+                                    .images(resultImages)
+                                    .build();
+
+                        })
+                .toList();
 
     }
 }

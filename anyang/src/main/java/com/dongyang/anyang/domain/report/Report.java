@@ -21,7 +21,7 @@ public class Report {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id") //지금 유저 로그인 구현 안해서 일단 널 허용해둠
+    @JoinColumn(name = "user_id", nullable = false) //지금 유저 로그인 구현 안해서 일단 널 허용해둠
     private User user;
 
     private String description;

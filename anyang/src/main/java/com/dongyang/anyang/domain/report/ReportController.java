@@ -33,4 +33,9 @@ public class ReportController {
         Long userId = userDetails.getId();
         return ResponseEntity.ok(reportService.getMyReports(userId));
     }
+
+    @GetMapping("/api/admin/report")
+    public ResponseEntity<List<ReportResponseDto>> getAllReports(){
+        return ResponseEntity.ok(reportService.getAllReports());
+    }
 }
