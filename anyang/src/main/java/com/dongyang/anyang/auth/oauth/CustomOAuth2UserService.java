@@ -7,6 +7,7 @@ import com.dongyang.anyang.domain.user.UserRepository;
 import com.dongyang.anyang.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
@@ -18,12 +19,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Value("#{'${admin.emails}'.split(',\\s*')}")
     private List<String> adminEmails;
@@ -58,7 +61,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         Provider provider = Provider.valueOf(registrationId.toUpperCase());
         User user = User.builder()
                 .email(userInfo.getEmail())
-                .password(null)
+                .password(passwordEncoder.encode(UUID.randomUUID().toString()))
                 .provider(provider)
                 .name(userInfo.getName())
                 .role(resolveRole(userInfo.getEmail()))
