@@ -2,7 +2,7 @@ spring:
   application:
     name: anyang
   datasource:
-    url: jdbc:mysql://localhost:3306/anyangproj?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    url: jdbc:mysql://localhost:3306/anyangproj?serverTimezone=Asia/Seoul&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true
     username: ${DB_USERNAME:root}
     password: ${PASSWORD:dongyang}
     driver-class-name: com.mysql.cj.jdbc.Driver
