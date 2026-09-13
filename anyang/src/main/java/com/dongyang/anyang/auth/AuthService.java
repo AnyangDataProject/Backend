@@ -58,7 +58,7 @@ public class AuthService {
         }
 
         String token = jwtProvider.createToken(user.getId(), user.getEmail(), user.getRole());
-
+        user.updateLastLogin();
         return new AuthDto.TokenResponse(token, user.getEmail(), user.getName(), user.getRole().name());
     }
 
