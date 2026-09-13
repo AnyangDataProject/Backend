@@ -58,7 +58,7 @@ cloud:
       secret-key: ${AWS_SECRET_KEY}
 
 jwt:
-  secret: temporary-local-dev-secret-key-change-this-please-32bytes-min
+  secret: ${JWT_SECRET:temporary-local-dev-secret-key-change-this-please-32bytes-min}
   expiration: 86400000  # 24시간
 
 admin:
