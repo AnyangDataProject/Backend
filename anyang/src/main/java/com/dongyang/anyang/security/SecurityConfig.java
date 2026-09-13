@@ -50,7 +50,11 @@ public class SecurityConfig {
                                 "/auth/login",
                                 "/oauth2/**",
                                 "/login/oauth2/**",
-                                "/error", "/api/report/**").permitAll()
+                                "/error",
+                                "/api/report/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/v3/api-docs/**").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
