@@ -2,8 +2,8 @@ spring:
   application:
     name: anyang
   datasource:
-    url: jdbc:mysql://localhost:3306/anyangproj?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-    username: root
+    url: jdbc:mysql://localhost:3306/anyangproj?serverTimezone=Asia/Seoul&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true
+    username: ${DB_USERNAME:root}
     password: ${PASSWORD:dongyang}
     driver-class-name: com.mysql.cj.jdbc.Driver
   security:
@@ -62,7 +62,7 @@ cloud:
       secret-key: ${AWS_SECRET_KEY}
 
 jwt:
-  secret: temporary-local-dev-secret-key-change-this-please-32bytes-min
+  secret: ${JWT_SECRET:temporary-local-dev-secret-key-change-this-please-32bytes-min}
   expiration: 86400000  # 24시간
 
 admin:
