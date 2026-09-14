@@ -19,7 +19,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
     private final JwtProvider jwtProvider;
 
-    private static final String FRONTEND_REDIRECT_URI = "http://localhost:3000/oauth/callback";
+    private static final String FRONTEND_REDIRECT_URI = "http://localhost:5173/oauth/callback";
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
