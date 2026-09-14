@@ -5,10 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -43,5 +40,14 @@ public class ReportController {
     @GetMapping("/api/admin/report/unclassified")
     public ResponseEntity<List<ReportResponseDto>> getUnclassifiedReports() {
         return ResponseEntity.ok(reportService.getUnclassifiedReports());
+    }
+
+    @PatchMapping("/api/admin/report/{reportId}/status")
+    public ResponseEntity<Void> updateReportStatus(
+            @PathVariable Long reportId,
+            @RequestParam Report.ReportStatus status
+    ) {
+        reportService.updateStatus(reportId, status);
+        return ResponseEntity.ok().build();
     }
 }

@@ -555,4 +555,17 @@ public class ReportService {
                 })
                 .toList();
     }
+
+    @Transactional
+    public void updateStatus(Long reportId, Report.ReportStatus status) {
+
+        Report report = reportRepository.findById(reportId)
+                .orElseThrow(() ->
+                        new IllegalArgumentException(
+                                "해당 신고를 찾을 수 없습니다. reportId=" + reportId
+                        )
+                );
+
+        report.setStatus(status);
+    }
 }
