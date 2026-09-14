@@ -19,7 +19,7 @@ public class AuthController {
         try {
             authService.signup(request);
             return ResponseEntity.ok("회원가입 성공");
-        } catch (IllegalStateException e) {
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
