@@ -23,6 +23,6 @@ public class ReportResponseDto {
     private String description;
     private Double aiConfidence;
     private List<ReportImageResponseDto> images;
-
+    private Long inspectionClusterId;
     //분석 기능(위험도 분석이나 우선순위 할거면 여기 추가해야할듯)
 }

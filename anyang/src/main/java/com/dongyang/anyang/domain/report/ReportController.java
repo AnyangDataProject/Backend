@@ -8,11 +8,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 public class ReportController {
 
@@ -37,5 +38,10 @@ public class ReportController {
     @GetMapping("/api/admin/report")
     public ResponseEntity<List<ReportResponseDto>> getAllReports(){
         return ResponseEntity.ok(reportService.getAllReports());
+    }
+
+    @GetMapping("/api/admin/report/unclassified")
+    public ResponseEntity<List<ReportResponseDto>> getUnclassifiedReports() {
+        return ResponseEntity.ok(reportService.getUnclassifiedReports());
     }
 }

@@ -1,5 +1,6 @@
 package com.dongyang.anyang.domain.report;
 
+import com.dongyang.anyang.domain.inspection.InspectionCluster;
 import com.dongyang.anyang.domain.user.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -50,6 +51,10 @@ public class Report {
 
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "inspection_cluster_id")
+    private InspectionCluster inspectionCluster;
 
     @PrePersist
     protected void onCreate() {
