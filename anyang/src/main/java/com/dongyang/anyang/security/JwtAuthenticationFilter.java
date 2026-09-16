@@ -33,7 +33,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             Long userId = jwtProvider.getUserId(token);
             Optional<User> userOptional = userRepository.findById(userId);
             if(userOptional.isPresent()) {
-                CustomUserDetails userDetails = new CustomUserDetails(userOptional.get());
+                User user = userOptional.get();
+                if(user.getStatus() == User.UserStatus.SUSPENDED) {
+                    filterChain.doFilter(request, response);
+                    return ;
+                }
+
+                CustomUserDetails userDetails = new CustomUserDetails(user);
 
                 System.out.println("========== JWT AUTH ==========");
                 System.out.println("USER ID = " + userDetails.getId());
@@ -48,13 +54,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                 null,
                                 userDetails.getAuthorities()
                         );
-
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            }
-            if(userOptional.isPresent()) {
-                CustomUserDetails userDetails = new CustomUserDetails(userOptional.get());
-
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }

@@ -40,6 +40,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         User user = userRepository.findByEmail(userInfo.getEmail())
                 .orElseGet(() -> registerNewUser(userInfo, registrationId));
 
+        if(user.getStatus() == User.UserStatus.SUSPENDED) {
+            throw new OAuth2AuthenticationException("이용이 제한된 계정입니다.");
+        }
+
         Role syncedRole = resolveRole(user.getEmail());
         if(syncedRole != user.getRole()) {
             user.updateRole(syncedRole);
