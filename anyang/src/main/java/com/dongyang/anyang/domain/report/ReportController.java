@@ -2,6 +2,7 @@ package com.dongyang.anyang.domain.report;
 
 import com.dongyang.anyang.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -16,7 +17,7 @@ public class ReportController {
 
     private final ReportService reportService;
 
-    @PostMapping("/api/report")
+    @PostMapping(value = "/api/report", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Long> createReport(@RequestPart("report") ReportDto dto,
                                              @RequestPart("images") List<MultipartFile> images,
                                              @AuthenticationPrincipal CustomUserDetails userDetails){
