@@ -267,12 +267,10 @@ public class ReportService {
                 .severity(
                         report.getSeverity()
                                 .name()
-                                .toLowerCase()
                 )
                 .status(
                         report.getStatus()
                                 .name()
-                                .toLowerCase()
                 )
                 .address(report.getAddress())
                 .latitude(report.getLatitude())
