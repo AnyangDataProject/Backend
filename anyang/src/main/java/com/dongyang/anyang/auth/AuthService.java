@@ -44,6 +44,10 @@ public class AuthService {
         User user = userRepository.findByEmail(request.email())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일입니다."));
 
+        if(user.getStatus() == User.UserStatus.SUSPENDED) {
+            throw new IllegalStateException("이용이 제한된 계정입니다. 관리자에게 문의해주세요.");
+        }
+
         if(user.getPassword() == null) {
             throw new IllegalArgumentException("이 계정은 소셜 로그인으로 가입되었습니다. Google/Naver로 로그인해주세요.");
         }

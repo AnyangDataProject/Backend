@@ -29,7 +29,9 @@ public class AuthController {
         try {
             AuthDto.TokenResponse responseToken = authService.login(request);
             return ResponseEntity.ok(responseToken);
-        } catch (IllegalStateException | IllegalArgumentException e) {
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
     }
