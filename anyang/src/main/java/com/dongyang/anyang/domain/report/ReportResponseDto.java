@@ -1,5 +1,7 @@
 package com.dongyang.anyang.domain.report;
 
+import com.dongyang.anyang.domain.ai.AiDetectionSummaryDto;
+import com.dongyang.anyang.domain.ai.AiResponseDto;
 import com.dongyang.anyang.domain.image.ReportImageResponseDto;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,5 +26,5 @@ public class ReportResponseDto {
     private Double aiConfidence;
     private List<ReportImageResponseDto> images;
     private Long inspectionClusterId;
-    //분석 기능(위험도 분석이나 우선순위 할거면 여기 추가해야할듯)
+    private List<AiDetectionSummaryDto> aiDetections;
 }
