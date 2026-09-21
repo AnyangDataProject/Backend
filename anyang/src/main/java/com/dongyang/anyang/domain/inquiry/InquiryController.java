@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -40,17 +41,29 @@ public class InquiryController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<InquiryDto.DetailResponse> getDetail(@PathVariable Long id,
+    public ResponseEntity<?> getDetail(@PathVariable Long id,
                                                              @AuthenticationPrincipal CustomUserDetails userDetails) {
-        return ResponseEntity.ok(inquiryService.getDetail(id, userDetails.getUser()));
+        try {
+            return ResponseEntity.ok(inquiryService.getDetail(id, userDetails.getUser()));
+        } catch(IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch(AccessDeniedException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> update(@PathVariable Long id,
-                                       @RequestBody InquiryDto.UpdateRequest request,
-                                       @AuthenticationPrincipal CustomUserDetails userDetails) {
-        inquiryService.update(id, userDetails.getUser(), request);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> update(@PathVariable Long id,
+                                    @RequestBody InquiryDto.UpdateRequest request,
+                                    @AuthenticationPrincipal CustomUserDetails userDetails) {
+        try {
+            inquiryService.update(id, userDetails.getUser(), request);
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (AccessDeniedException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -63,10 +76,16 @@ public class InquiryController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id,
-                                       @AuthenticationPrincipal CustomUserDetails userDetails) {
-        inquiryService.delete(id, userDetails.getUser());
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<?> delete(@PathVariable Long id,
+                                    @AuthenticationPrincipal CustomUserDetails userDetails) {
+        try {
+            inquiryService.delete(id, userDetails.getUser());
+            return ResponseEntity.noContent().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (AccessDeniedException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
     }
 
     @PostMapping("/{id}/files")
